@@ -15,4 +15,9 @@ div.container
   hr
   h2 beaderboard
   - each beader in beaders
-    h3(style='color:#aaa') anon#{beader[0]}: #{beader[1]} #{beader== name ? ' (you)' : ''}
+    <h3 style="color:#aaa">
+    <span>anon#{beader[0]}: #{beader[1]}</span>
+    - if (beader[0]== name)
+       | <span style="color:#555">(you)</span>
+
+    </h3>

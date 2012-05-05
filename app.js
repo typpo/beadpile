@@ -20,7 +20,7 @@ app.get('/', function(req, res) {
   req.session.cookie.maxAge = 31 * 24 * 60 * 60 * 1000 * 12 * 5; // 5 yrs
 
   if (!req.session.anonid)
-    req.session.anonid = Math.floor(Math.random() * 100);
+    req.session.anonid = Math.floor(Math.random() * 1000);
 
   if (!req.session.beads) req.session.beads = 0;
   var redis = rutil.getConnection();
@@ -58,12 +58,18 @@ app.get('/add20', function(req, res) {
 
 app.get('/take', function(req, res) {
   var redis = rutil.getConnection();
-  redis.decr('beadpile:pile:beads');
-  req.session.beads++;
-  redis.zadd('beadpile:beaders', req.session.beads, req.session.anonid);
-  setTimeout(function() {
-    res.redirect('/')
-  }, 1000);
+  redis.get('beadpile:pile:beads', function(err, num) {
+    if (parseInt(num) < 1) {
+      res.send("wait for more beads :(.  <a href="/">home</a>");
+      return;
+    }
+    redis.decr('beadpile:pile:beads');
+    req.session.beads++;
+    redis.zadd('beadpile:beaders', req.session.beads, req.session.anonid);
+    setTimeout(function() {
+      res.redirect('/')
+    }, 1000);
+  });
 });
 app.get('/give', function(req, res) {
   var redis = rutil.getConnection();

@@ -1,0 +1,20 @@
+div.container
+  h1 beadpile
+  h3 welcome, anon##{name}
+  h1 #{total_beads} beads in the pile
+  hr
+  h2 You have #{your_beads} beads
+  h2#givetake
+    span
+      - if (your_beads < 1)
+        span(style='color:#ccc') give
+      - else
+        a(href='/give') give
+    span(style='margin-left: 30px')
+      a(href='/take') take
+  h2#loading(style='display:none;') beading...
+  hr
+  h2 beaderboard
+  - each beader in beaders
+    h3(style='color:#aaa') anon##{beader}
+

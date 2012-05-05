@@ -1,6 +1,5 @@
 div.container
   h1 beadpile
-  h3 welcome, anon##{name}
   h1 #{total_beads} beads in the pile
   hr
   h2 You have #{your_beads} beads
@@ -16,4 +15,4 @@ div.container
   hr
   h2 beaderboard
   - each beader in beaders
-    h3(style='color:#aaa') anon##{beader}#{beader == name ? ' (you)' : ''}
+    h3(style='color:#aaa') anon#{beader[0]}: #{beader[1]} #{beader== name ? ' (you)' : ''}

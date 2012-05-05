@@ -25,11 +25,22 @@ app.get('/', function(req, res) {
   if (!req.session.beads) req.session.beads = 0;
   var redis = rutil.getConnection();
   redis.get('beadpile:pile:beads', function(err, num) {
-    redis.zrevrange('beadpile:beaders', 0, -1, function(err, result) {
+    redis.zrevrange('beadpile:beaders', 0, -1, 'withscores', function(err, result) {
+      beaders = [];
+      var idx = 0;
+      for (var i=0; i < result.length; i++) {
+        if (i==0 || i%2 == 0) {
+          beaders[idx] = [result[i], 0];
+        }
+        else {
+          beaders[idx][1] = result[i];
+          idx++;
+        }
+      }
       res.render('index', {
         total_beads: num,
         your_beads: req.session.beads,
-        beaders: result,
+        beaders: beaders,
         name: req.session.anonid,
       });
     });

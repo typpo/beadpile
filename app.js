@@ -25,8 +25,7 @@ app.get('/', function(req, res) {
   if (!req.session.beads) req.session.beads = 0;
   var redis = rutil.getConnection();
   redis.get('beadpile:pile:beads', function(err, num) {
-    redis.zrange('beadpile:beaders', 0, -1, function(err, result) {
-      console.log(result);
+    redis.zrevrange('beadpile:beaders', 0, -1, function(err, result) {
       res.render('index', {
         total_beads: num,
         your_beads: req.session.beads,
@@ -43,7 +42,7 @@ app.get('/add20', function(req, res) {
     redis.incr('beadpile:pile:beads')
   setTimeout(function() {
     res.redirect('/')
-  }, 2000);
+  }, 1000);
 });
 
 app.get('/take', function(req, res) {
@@ -53,7 +52,7 @@ app.get('/take', function(req, res) {
   redis.zadd('beadpile:beaders', req.session.beads, req.session.anonid);
   setTimeout(function() {
     res.redirect('/')
-  }, 2000);
+  }, 1000);
 });
 app.get('/give', function(req, res) {
   var redis = rutil.getConnection();
@@ -66,10 +65,10 @@ app.get('/give', function(req, res) {
   redis.zadd('beadpile:beaders', req.session.beads, req.session.anonid);
   setTimeout(function() {
     res.redirect('/')
-  }, 2000);
+  }, 1000);
 });
 
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 4348;
 app.listen(port);
 
-console.log('Started listening on port 8080');
+console.log('Started listening on port 4348');

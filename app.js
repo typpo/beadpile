@@ -52,7 +52,7 @@ app.get('/add20', function(req, res) {
   for (var i=0; i < 20; i++)
     redis.incr('beadpile:pile:beads')
   setTimeout(function() {
-    res.redirect('/')
+    res.redirect('/beadpile')
   }, 1000);
 });
 
@@ -67,7 +67,7 @@ app.get('/take', function(req, res) {
     req.session.beads++;
     redis.zadd('beadpile:beaders', req.session.beads, req.session.anonid);
     setTimeout(function() {
-      res.redirect('/')
+      res.redirect('/beadpile')
     }, 1000);
   });
 });
@@ -81,11 +81,11 @@ app.get('/give', function(req, res) {
   req.session.beads--;
   redis.zadd('beadpile:beaders', req.session.beads, req.session.anonid);
   setTimeout(function() {
-    res.redirect('/')
+    res.redirect('/beadpile')
   }, 1000);
 });
 
 var port = process.env.PORT || 4348;
 app.listen(port);
 
-console.log('Started listening on port 4348');
+console.log('Started listening on port ' + port);
